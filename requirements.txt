@@ -1,0 +1,6 @@
+astropy
+numpy
+matplotlib
+scikit-image
+jupyter_contrib_nbextensions
+scikit-learn
