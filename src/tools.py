@@ -1,6 +1,7 @@
 import numpy as np
 import astropy.io.fits as fits
 import matplotlib.pyplot as plt
+import protostar
 
 def _load_data(self, data_path):
     '''Extracts the image and header data from the provided protostar outflow path
@@ -42,7 +43,7 @@ class LassoTool:
             self.ax.imshow(np.sqrt(np.abs(self.image))*np.sign(self.image), cmap='gray', origin='upper')
         else:
             self.ax.imshow(self.image, cmap='gray', origin='upper')
-        self.ax.scatter(outflow.protostar.source_choord[0], outflow.protostar.source_choord[1])
+        self.ax.scatter(outflow.protostar.source_coord[0], outflow.protostar.source_coord[1])
         self.mask = np.zeros_like(self.image, dtype=bool)
         self.lasso = LassoSelector(self.ax, onselect=self.on_select)
         self.x_coords, self.y_coords = np.meshgrid(np.arange(self.image.shape[1]), np.arange(self.image.shape[0]))
@@ -115,7 +116,7 @@ def _rotate_outflow(self, image, angle, reshape=False):
     from scipy.ndimage import rotate, shift
 
     h, w = image.shape
-    cy, cx = self.protostar.source_choord  # Pivot point (row, column)
+    cy, cx = self.protostar.source_coord  # Pivot point (row, column)
 
     # Calculate translation to center pivot point at the center of the image
     shift_y, shift_x = h // 2 - cy, w // 2 - cx
@@ -158,7 +159,7 @@ def _find_max_sigma_val(self, image, starting_sigma=1, max_sigma_limit=None):
         detected_edge = _detect_edge(masked_image)
         y, x = np.nonzero(detected_edge)
         
-        mask_pass_source = np.min(x) >= self.protostar.source_choord[0] if self.color == 'blue' else np.max(x) <= self.protostar.source_choord[0]
+        mask_pass_source = np.min(x) >= self.protostar.source_coord[0] if self.color == 'blue' else np.max(x) <= self.protostar.source_coord[0]
         if mask_pass_source or sigma == max_sigma_limit:
             max_sigma_found = True
             return sigma
