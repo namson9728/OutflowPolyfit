@@ -1,7 +1,6 @@
 import numpy as np
 import astropy.io.fits as fits
 import matplotlib.pyplot as plt
-import protostar
 
 def _load_data(self, data_path):
     '''Extracts the image and header data from the provided protostar outflow path
