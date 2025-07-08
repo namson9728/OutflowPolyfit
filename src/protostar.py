@@ -36,8 +36,6 @@ class Outflow:
             The inherited protostar parent object
         `color` : str
             The color shift of the outflow (red, blue)
-        `orientation` : str
-            The orientation of the outflow when plotted. red shifted = left, blue shifted = right
         `image` : array
             Contains the raw image of the outflow extracted from the original fits file
         `image_cleaned` : array
@@ -60,6 +58,8 @@ class Outflow:
             A child object containing data of the top wing of the outflow
         `bot_wing` : Wing
             A child object containing data of the bottom wing of the outflow
+        `nodes` : array
+            The array of nodes used to define the start and end points of each edge detection
         `angle_spectrum` : dict
             A dictionary storing the resulting angle spectrum of both the best and 2nd order polynomial fit
         
@@ -67,7 +67,6 @@ class Outflow:
     def __init__(self, protostar, color:str):
         self.protostar = protostar
         self.color = color
-        self.orientation = None     # Color will decide orientation: red-right, blue-left
         self.image = None
         self.image_cleaned = None
         self.header = None
@@ -79,6 +78,7 @@ class Outflow:
         self.edges = None
         self.top_wing = Wing(self, 'top')
         self.bot_wing = Wing(self, 'bot')
+        self.nodes = None
         self.angle_spectrum = None
 
 class Wing:
@@ -91,8 +91,6 @@ class Wing:
             The location of the wing (top, bot)
         `edges` : array
             The respective edge detections that has been split into top or bottom wing
-        `nodes` : array
-            The array of nodes used to define the start and end points of each edge detection
         `combined_edges` : array
             The resulting edge detection once combined using the node values
         `poly2` : Polyfit
@@ -104,7 +102,6 @@ class Wing:
         self.outflow = outflow
         self.loc = loc
         self.edges = None
-        self.nodes = None
         self.combined_edges = None
         self.poly2 = Polyfit(self)
         self.polyBest = Polyfit(self)
@@ -133,3 +130,4 @@ class Polyfit:
         self.degree = None
         self.coefficients = None
         self.weights = None
+        self.reduced_chi_squared = None
