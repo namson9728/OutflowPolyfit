@@ -1,6 +1,7 @@
 import numpy as np
 import astropy.io.fits as fits
 import matplotlib.pyplot as plt
+import unittest
 
 def _load_data(self, data_path):
     '''Extracts the image and header data from the provided protostar outflow path
@@ -215,7 +216,7 @@ def reduced_chi_squared(header, chi_squared, poly_order, fit_array):
 
     return reduced_chi
 
-def find_best_poly_order_fit(x, y, header, poly_range=(1, 10)):
+def find_best_poly_deg_fit(x, y, header, poly_range=(1, 10)):
     '''Finds the best polynomial fit based on the reduced chi squared value
     '''
     chi_list = []
@@ -293,3 +294,20 @@ def open_pickle(filename):
     with open(filename, 'rb') as inp:
         obj = pickle.load(inp)
     return obj
+
+def verify_no_none_attributes(obj, checkLasso=False):
+    '''Makes sure that no attributes in the object has been left as None
+    
+    Args:
+        obj : Python Object
+            The object on which to run the verification
+        checkLasso : bool
+            Because `image_lasso` is not always set, the user and skip the assert statement for this attribute
+            (Default `False` - does not check)
+    '''
+    for key in obj.__dict__:
+        if checkLasso:
+                assert getattr(obj, key) is not None, f"{key} has not been set in {obj}"
+        else:
+             if key not in ('image_lasso'):
+                assert getattr(obj, key) is not None, f"{key} has not been set in {obj}"
